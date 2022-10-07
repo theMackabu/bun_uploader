@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "lib": ["ESNext"],
+      "module": "esnext",
+      "target": "esnext",
+      "moduleResolution": "node",
+      "outDir": "dist",
+      "types": ["bun-types"],
+      "paths": {
+        "@/*": ["./api/*"],
+      },
+    }
+  }
+
+  

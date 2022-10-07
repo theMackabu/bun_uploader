@@ -1,0 +1,5 @@
+node_modules
+files.sqlite
+dist
+.env
+frontend

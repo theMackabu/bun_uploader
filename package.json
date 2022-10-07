@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "name": "uploader",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "dependencies": {
+    "base-64": "^1.0.0",
+    "hono": "^2.0.0",
+    "nanoid": "^4.0.0",
+    "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "start": "bun run api/server.ts"
+  },
+  "module": "pkg/server.js"
+}
