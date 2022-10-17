@@ -15,7 +15,15 @@ const routesDocumentation = [
 	{ type: 'GET', name: 'file info', url: '/cdn/info', param: 'id', body: '', info: 'View info about a file' },
 	{ type: 'GET', name: 'download file', url: '/cdn', param: 'uuid/:name', body: '', info: 'Download file from cdn' },
 	{ type: 'POST', name: 'upload file', url: '/cdn/upload', param: 'name', body: '{arrayBuffer}', info: 'Upload file to cdn' },
-	{ type: 'GET', name: 'takedown request', url: '/cdn/takedown', param: '', body: '', info: 'takedown request for file' },
+	{ type: 'GET', name: 'takedown page', url: '/cdn/takedown', param: '', body: '', info: 'takedown file page' },
+	{
+		type: 'POST',
+		name: 'takedown request',
+		url: '/cdn/takedown',
+		param: '',
+		body: '{id: string, name: string, reason: string}',
+		info: 'takedown request for file',
+	},
 ];
 
 api.get('/docs', (res) => {
@@ -126,8 +134,38 @@ api.post('/upload/:name', async (c) => {
 api.get('/takedown', (res) => {
 	return res.html(
 		html`<!DOCTYPE html>
-			<p>takedown page wip</p>`
+			<form action="/cdn/takedown" method="post">
+				<div>
+					<label for="id">id: </label>
+					<input type="text" name="id" id="id" required />
+				</div>
+				<div>
+					<label for="name">name: </label>
+					<input type="text" name="name" id="name" required />
+				</div>
+				<div>
+					<label for="reason">reason: </label>
+					<input type="text" name="reason" id="reason" required />
+				</div>
+				<div>
+					<input type="submit" value="submit" />
+				</div>
+			</form>`
 	);
+});
+
+api.post('/takedown', async (res) => {
+	const body = await res.req.text();
+	const data = JSON.parse('{"' + decodeURI(body).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}');
+
+	console.log(`takedown request for ${data.id}:${data.name}`);
+	db.client.exec(`INSERT INTO takedowns (id, name, reason) VALUES ($id, $name, $reason)`, {
+		$id: data.id,
+		$name: data.name,
+		$reason: data.reason,
+	});
+
+	return res.json({ [data.id]: `submitted takedown request for: ${data.name}` });
 });
 
 api.get('/health', (res) => {

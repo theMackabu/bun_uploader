@@ -49,6 +49,18 @@ switch (argv.at(2)) {
 			console.log(JSON.stringify(db.client.query(`SELECT * FROM files`).all(), null, 4));
 		}
 		break;
+	case 'takedowns':
+		if (argv.length > 3) {
+			console.log("too many arguments for 'takedowns'");
+		} else {
+			const query = db.client.query(`SELECT * FROM takedowns`).all();
+			query.map((data) => {
+				return console.log(
+					`\x1b[36m${data.id}\n\x1b[0m\x1b[33m  - name: ${data.name}\n  - reason: ${decodeURIComponent(data.reason.replace(/\+/g, ' '))}\n\x1b[0m`
+				);
+			});
+		}
+		break;
 	case 'info':
 		if (argv.at(3) == undefined) {
 			console.log("invalid arguments for 'info'");
